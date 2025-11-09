@@ -1,1 +1,20 @@
-[]
+[
+  {
+    "title": "Digital Banking Platform",
+    "slug": "banking-platform",
+    "summary": "Full-stack banking system providing secure account oversight, transfers, and audit logging across FastAPI, MySQL, and React.",
+    "tech": [
+      "FastAPI",
+      "MySQL",
+      "SQLAlchemy",
+      "React",
+      "TypeScript",
+      "Vite",
+      "TailwindCSS"
+    ],
+    "category": ["Security", "DevOps"],
+    "github": "https://github.com/enatandereje/banking",
+    "demo": "https://enatanbankingsystem.vercel.app",
+    "featured": true
+  }
+]

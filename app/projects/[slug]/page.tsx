@@ -4,6 +4,53 @@ import Link from "next/link";
 
 // This would normally come from a database or CMS
 const projects: Record<string, any> = {
+  "banking-platform": {
+    title: "Digital Banking Platform",
+    summary:
+      "Full-stack banking system enabling secure customer onboarding, real-time transfers, and audit trails across FastAPI and a React admin console.",
+    problem:
+      "Retail banks need a secure digital channel that enforces role-based access, transaction auditing, and real-time balance accuracy without sacrificing developer velocity.",
+    approach:
+      "Designed a service-oriented FastAPI backend with SQLAlchemy models over MySQL, JWT-secured auth, and CORS-controlled APIs. Paired it with a Vite + React + TypeScript frontend that consumes admin/user endpoints, featuring guarded routes, React Query caching, and Tailwind-driven UI components.",
+    tools: [
+      "FastAPI",
+      "Python",
+      "MySQL",
+      "SQLAlchemy",
+      "Alembic",
+      "React",
+      "TypeScript",
+      "Vite",
+      "TailwindCSS",
+      "React Query"
+    ],
+    results: [
+      "Implements end-to-end money movement with transfer status tracking and balance reconciliation.",
+      "Role-based admin console with live user management, activation toggles, and role reassignment.",
+      "Auditable transaction history via dedicated logging tables wire-compatible with BI tooling."
+    ],
+    howToReproduce: `
+1. Start the FastAPI backend:
+   cd portfolio projects/banking/backend
+   python -m venv .venv
+   .\\.venv\\Scripts\\activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+
+2. Prepare the MySQL schema:
+   - Execute the SQL in backend/README.md to create enums, tables, and seed users.
+   - Configure .env with database credentials matching your MySQL instance.
+
+3. Launch the React admin frontend:
+   cd ../frontend
+   npm install
+   cp .env.local.sample .env.local
+   # set VITE_API_BASE_URL to the FastAPI endpoint
+   npm run dev
+
+4. Sign in with the seeded admin account to manage users, accounts, and transfers in real time.
+    `,
+  },
   "forex-predictor": {
     title: "Forex Predictor (end-to-end)",
     summary: "Backtested signal generation for FX pairs — 12% annualized return on historical test set.",
