@@ -6,126 +6,33 @@ Your contact form is ready! Here's how to connect it to send emails to **enatan1
 
 ## 🚀 Quick Setup (Recommended: Resend)
 
-### Option 1: Resend (Easiest, Free Tier)
+### Resend (Easiest, Free Tier) — Already Integrated
 
-**Why Resend?**
-- ✅ Free tier: 100 emails/day
-- ✅ No credit card required
-- ✅ Simple API
-- ✅ Takes 5 minutes
+The code base now ships with Resend wired in:
+- ✅ `resend` package installed and API route updated
+- ✅ Defaults to `enatan10712@gmail.com` if `RECIPIENT_EMAIL` isn’t set
+- ✅ Live demo uses `onboarding@resend.dev` sender for testing
 
-#### Step 1: Sign Up
-1. Go to [resend.com](https://resend.com)
-2. Sign up with GitHub or email
-3. Verify your email
+### What You Must Still Do
 
-#### Step 2: Get API Key
-1. Go to API Keys section
-2. Click "Create API Key"
-3. Name it "Portfolio Contact Form"
-4. Copy the API key (starts with `re_`)
+1. **Create API Key**
+   - Visit [resend.com](https://resend.com), sign up, and generate an API key (starts with `re_`).
 
-#### Step 3: Add to Project
+2. **Add Environment Variables**
+   - Create `.env.local` (local dev) and configure Vercel project settings with:
+     ```bash
+     RESEND_API_KEY=re_your_api_key_here
+     RECIPIENT_EMAIL=enatan10712@gmail.com
+     ```
 
-Create `.env.local` file in your portfolio folder:
-```bash
-RESEND_API_KEY=re_your_api_key_here
-RECIPIENT_EMAIL=enatan10712@gmail.com
-```
+3. **Redeploy**
+   - Restart local dev server (`npm run dev`) or trigger a Vercel redeploy so the new env vars apply.
 
-#### Step 4: Install Resend
+### Test Checklist
 
-```bash
-npm install resend
-```
-
-#### Step 5: Update API Route
-
-Replace the content in `app/api/contact/route.ts`:
-
-```typescript
-import { NextResponse } from "next/server";
-import { Resend } from "resend";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-export async function POST(request: Request) {
-  try {
-    const body = await request.json();
-    const { name, email, subject, message, honeypot } = body;
-
-    // Honeypot check
-    if (honeypot) {
-      return NextResponse.json(
-        { error: "Invalid submission" },
-        { status: 400 }
-      );
-    }
-
-    // Validate required fields
-    if (!name || !email || !subject || !message) {
-      return NextResponse.json(
-        { error: "All fields are required" },
-        { status: 400 }
-      );
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return NextResponse.json(
-        { error: "Invalid email address" },
-        { status: 400 }
-      );
-    }
-
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>', // Use this for testing
-      to: [process.env.RECIPIENT_EMAIL || 'enatan10712@gmail.com'],
-      subject: `Portfolio Contact: ${subject}`,
-      replyTo: email,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>From:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <hr />
-        <p><strong>Message:</strong></p>
-        <p>${message.replace(/\n/g, '<br>')}</p>
-      `,
-    });
-
-    if (error) {
-      console.error("Resend error:", error);
-      return NextResponse.json(
-        { error: "Failed to send message" },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(
-      { message: "Message sent successfully" },
-      { status: 200 }
-    );
-  } catch (error) {
-    console.error("Contact form error:", error);
-    return NextResponse.json(
-      { error: "Failed to send message" },
-      { status: 500 }
-    );
-  }
-}
-```
-
-#### Step 6: Test It!
-
-1. Restart your dev server: `npm run dev`
-2. Go to `/contact` page
-3. Fill out the form
-4. Check **enatan10712@gmail.com** for the email!
-
-**Note:** With free tier, you can only send FROM `onboarding@resend.dev`. To use your own domain, you need to verify it (optional).
+1. Submit the form on `/contact`.
+2. Confirm success toast and email delivered to **enatan10712@gmail.com**.
+3. Reply-to should target the sender’s email automatically.
 
 ---
 
