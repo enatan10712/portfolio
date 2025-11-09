@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const recipientEmail = process.env.RECIPIENT_EMAIL || "enatan10712@gmail.com";
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: Request) {
   try {
@@ -23,7 +23,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: "Invalid email address" },
@@ -31,14 +30,16 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!process.env.RESEND_API_KEY) {
-      console.error("Missing RESEND_API_KEY environment variable.");
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.warn("RESEND_API_KEY not configured. Contact form submission stored locally only.");
       return NextResponse.json(
         { error: "Email service not configured" },
-        { status: 500 }
+        { status: 503 }
       );
     }
 
+    const resend = new Resend(apiKey);
     const { error } = await resend.emails.send({
       from: "Portfolio Contact <onboarding@resend.dev>",
       to: [recipientEmail],

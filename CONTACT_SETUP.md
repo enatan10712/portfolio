@@ -12,6 +12,7 @@ The code base now ships with Resend wired in:
 - ✅ `resend` package installed and API route updated
 - ✅ Defaults to `enatan10712@gmail.com` if `RECIPIENT_EMAIL` isn’t set
 - ✅ Live demo uses `onboarding@resend.dev` sender for testing
+- ⚠️ If `RESEND_API_KEY` is missing the API returns HTTP 503 (build no longer fails) — set the key before relying on the form.
 
 ### What You Must Still Do
 
@@ -27,6 +28,7 @@ The code base now ships with Resend wired in:
 
 3. **Redeploy**
    - Restart local dev server (`npm run dev`) or trigger a Vercel redeploy so the new env vars apply.
+   - On Vercel: Project → Settings → Environment Variables → add `RESEND_API_KEY` and `RECIPIENT_EMAIL`, then hit “Redeploy”.
 
 ### Test Checklist
 
