@@ -15,6 +15,7 @@
     "category": ["Security", "DevOps"],
     "github": "https://github.com/enatandereje/banking",
     "demo": "https://enatanbankingsystem.vercel.app",
+    "image": "/projects/digital-banking-dashboard.jpg",
     "featured": true
   }
 ]

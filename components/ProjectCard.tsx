@@ -27,11 +27,6 @@ export default function ProjectCard({
   const cardRef = useRef<HTMLDivElement>(null);
   const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
 
-  const handleDemoClick = () => {
-    if (!demo) return;
-    window.open(demo, "_blank", "noopener,noreferrer");
-  };
-
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
@@ -125,13 +120,14 @@ export default function ProjectCard({
           </a>
         )}
         {demo && (
-          <button
-            type="button"
-            onClick={handleDemoClick}
-            className="text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary hover:text-accent transition-colors"
+          <a
+            href={demo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary text-sm px-4 py-2"
           >
             Live Demo
-          </button>
+          </a>
         )}
       </div>
     </motion.div>
