@@ -16,7 +16,7 @@ const featuredProjects = projectsData.filter((p: any) => p.featured).slice(0, 3)
 
 const stats = [
   { label: "Years Experience", value: 3, suffix: "+" },
-  { label: "Projects Completed", value: 0, suffix: "+" },
+  { label: "Projects Completed", value: projectsData.length, suffix: "+" },
   { label: "Technologies", value: 20, suffix: "+" },
 ];
 
