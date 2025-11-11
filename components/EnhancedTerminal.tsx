@@ -9,6 +9,13 @@ import {
   playClickSound,
   playNotificationSound 
 } from '@/lib/sounds';
+import { 
+  playMidiClick, 
+  playMidiTyping, 
+  playMidiSuccess, 
+  playMidiError, 
+  playMidiNotification 
+} from '@/lib/midiSounds';
 
 interface Command {
   command: string;
@@ -45,8 +52,40 @@ export default function EnhancedTerminal() {
   const [isDragging, setIsDragging] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+  const [isAudioEnabled, setIsAudioEnabled] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Initialize audio on first interaction
+  useEffect(() => {
+    const enableAudio = () => {
+      setIsAudioEnabled(true);
+      // Play a silent sound to unlock audio
+      const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAADAAEARKwAAIhYAQACABAAZGF0YQQ=');
+      audio.volume = 0.001; // Almost silent
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          console.log('Audio play was prevented');
+        });
+      }
+      
+      // Remove event listeners after first interaction
+      window.removeEventListener('click', enableAudio);
+      window.removeEventListener('keydown', enableAudio);
+      window.removeEventListener('touchstart', enableAudio);
+    };
+
+    window.addEventListener('click', enableAudio, { once: true });
+    window.addEventListener('keydown', enableAudio, { once: true });
+    window.addEventListener('touchstart', enableAudio, { once: true });
+
+    return () => {
+      window.removeEventListener('click', enableAudio);
+      window.removeEventListener('keydown', enableAudio);
+      window.removeEventListener('touchstart', enableAudio);
+    };
+  }, []);
 
   // Theme configurations
   const themes = {
@@ -151,7 +190,14 @@ export default function EnhancedTerminal() {
     ]);
     
     setInput('');
-    playClickSound();
+    if (isAudioEnabled) {
+      try {
+        await playClickSound();
+      } catch (error) {
+        console.log('Falling back to MIDI click');
+        playMidiClick();
+      }
+    }
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -164,7 +210,14 @@ export default function EnhancedTerminal() {
     });
     
     setIsDragging(true);
-    playClickSound();
+    if (isAudioEnabled) {
+      try {
+        await playClickSound();
+      } catch (error) {
+        console.log('Falling back to MIDI click');
+        playMidiClick();
+      }
+    }
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
@@ -182,7 +235,12 @@ export default function EnhancedTerminal() {
 
   const changeTheme = (newTheme: Theme) => {
     setTheme(newTheme);
-    playNotificationSound();
+    if (isAudioEnabled) {
+      playNotificationSound().catch(() => {
+        console.log('Falling back to MIDI notification');
+        playMidiNotification();
+      });
+    }
   };
 
   return (
@@ -218,22 +276,33 @@ export default function EnhancedTerminal() {
           <div className="flex space-x-2">
             <button 
               className="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 transition-colors"
-              onClick={() => {
-                playClickSound();
+              onClick={async () => {
+                if (isAudioEnabled) {
+                  try {
+                    await playClickSound();
+                  } catch (error) {
+                    console.log('Falling back to MIDI click');
+                    playMidiClick();
+                  }
+                }
                 // Close terminal
               }}
             />
             <button 
               className="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 transition-colors"
               onClick={() => {
-                playClickSound();
+                if (isAudioEnabled) {
+                  playClickSound().catch(console.error);
+                }
                 // Minimize terminal
               }}
             />
             <button 
               className="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 transition-colors"
               onClick={() => {
-                playClickSound();
+                if (isAudioEnabled) {
+                  playClickSound().catch(console.error);
+                }
                 // Execute a command
               }}
             />
