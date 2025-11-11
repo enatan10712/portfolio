@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
@@ -9,6 +10,7 @@ import ParticleBackground from "@/components/ParticleBackground";
 import CustomCursor from "@/components/CustomCursor";
 import MouseTrail from "@/components/MouseTrail";
 import BackgroundGradient from "@/components/BackgroundGradient";
+import { usePageTransitionSounds } from "@/hooks/usePageTransitionSounds";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -28,6 +30,11 @@ export const metadata: Metadata = {
   },
 };
 
+function PageTransitionHandler() {
+  usePageTransitionSounds();
+  return null;
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,9 +50,11 @@ export default function RootLayout({
           <BackgroundGradient />
           <ParticleBackground />
           <div className="min-h-screen flex flex-col relative">
+            <PageTransitionHandler />
             <Header />
             <main className="flex-grow">
               {children}
+              <SpeedInsights />
             </main>
             <Footer />
           </div>

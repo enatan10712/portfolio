@@ -1,13 +1,15 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import CTAButtons from "@/components/CTAButtons";
 import InteractiveTerminal from "@/components/InteractiveTerminal";
+import EnhancedTerminal from "@/components/EnhancedTerminal";
 import ProjectCard from "@/components/ProjectCard";
 import TypingEffect from "@/components/TypingEffect";
 import AnimatedCounter from "@/components/AnimatedCounter";
 import GlitchText from "@/components/GlitchText";
 import Link from "next/link";
+import { useState, useEffect } from "react";
 
 // Import projects from JSON - add your own projects to data/projects.json
 import projectsData from "@/data/projects.json";
@@ -35,9 +37,45 @@ const heroHighlights = [
   "🚀 Creating reliable systems that scale.",
 ];
 
+// Add this type definition at the top level of the file
+type Theme = 'matrix' | 'cyberpunk' | 'ocean' | 'solarized' | 'dracula';
+
 export default function Home() {
+  const [showTerminal, setShowTerminal] = useState(false);
+  
+  // Toggle terminal with keyboard shortcut (Ctrl + `)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key === '`') {
+        e.preventDefault();
+        setShowTerminal(prev => !prev);
+      } else if (e.key === 'Escape') {
+        setShowTerminal(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
   return (
     <>
+      {/* Enhanced Terminal */}
+      <AnimatePresence>
+        {showTerminal && (
+          <EnhancedTerminal />
+        )}
+      </AnimatePresence>
+      
+      {/* Terminal Toggle Button */}
+      <motion.button
+        onClick={() => setShowTerminal(!showTerminal)}
+        className="fixed bottom-8 right-8 z-50 w-12 h-12 rounded-full bg-gradient-to-br from-green-500 to-blue-500 shadow-lg flex items-center justify-center text-white text-xl font-mono hover:scale-110 transition-all duration-200"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.95 }}
+        title="Toggle Terminal (Ctrl + `)"
+      >
+        {showTerminal ? '×' : '>'}
+      </motion.button>
       {/* Hero Section */}
       <section className="section pt-32 pb-16 ambient-bg">
         <div className="container-custom">
