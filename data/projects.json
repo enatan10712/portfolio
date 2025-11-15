@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Digital Banking Platform",
+    "slug": "banking-platform",
+    "summary": "Full-stack banking system providing secure account oversight, transfers, and audit logging across FastAPI, MySQL, and React.",
+    "tech": [
+      "FastAPI",
+      "MySQL",
+      "SQLAlchemy",
+      "React",
+      "TypeScript",
+      "Vite",
+      "TailwindCSS"
+    ],
+    "category": [
+      "Security",
+      "DevOps"
+    ],
+    "github": "https://github.com/enatandereje/banking",
+    "demo": "https://enatanbankingsystem.vercel.app",
+    "image": "/projects/digital-banking-dashboard.jpg",
+    "featured": true
+  },
+  {
+    "title": "osint ",
+    "slug": "osint-",
+    "summary": "osint GOD EYE",
+    "tech": [
+      "oosin't-GOD-EYE"
+    ],
+    "category": [
+      ""
+    ],
+    "github": "https://github.com/enatan10712/portfolio.git",
+    "demo": "https://osint-toolkit-v3.vercel.app",
+    "featured": false
+  }
+]

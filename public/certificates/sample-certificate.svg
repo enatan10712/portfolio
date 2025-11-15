@@ -1,0 +1,72 @@
+<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0f14;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#151a21;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3dd4c9;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ab8ad;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  
+  <!-- Border -->
+  <rect x="100" y="100" width="1720" height="880" fill="none" stroke="url(#accent)" stroke-width="3" rx="20"/>
+  <rect x="120" y="120" width="1680" height="840" fill="none" stroke="rgba(61, 212, 201, 0.3)" stroke-width="1" rx="15"/>
+  
+  <!-- Header -->
+  <text x="960" y="240" font-family="Arial, sans-serif" font-size="72" font-weight="bold" fill="#3dd4c9" text-anchor="middle">
+    CERTIFICATE OF COMPLETION
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="960" y="300" font-family="Arial, sans-serif" font-size="32" fill="#8b95a3" text-anchor="middle">
+    This certifies that
+  </text>
+  
+  <!-- Name -->
+  <text x="960" y="420" font-family="Arial, sans-serif" font-size="64" font-weight="bold" fill="#e6eef6" text-anchor="middle">
+    Enatan Dereje
+  </text>
+  
+  <!-- Line under name -->
+  <line x1="560" y1="450" x2="1360" y2="450" stroke="rgba(61, 212, 201, 0.5)" stroke-width="2"/>
+  
+  <!-- Description -->
+  <text x="960" y="540" font-family="Arial, sans-serif" font-size="32" fill="#8b95a3" text-anchor="middle">
+    has successfully completed
+  </text>
+  
+  <!-- Course Name -->
+  <text x="960" y="640" font-family="Arial, sans-serif" font-size="48" font-weight="bold" fill="#e6eef6" text-anchor="middle">
+    Sample Certificate Course
+  </text>
+  
+  <!-- Organization -->
+  <text x="960" y="720" font-family="Arial, sans-serif" font-size="36" fill="#8b95a3" text-anchor="middle">
+    Issued by Sample Organization
+  </text>
+  
+  <!-- Date and Signature -->
+  <text x="400" y="880" font-family="Arial, sans-serif" font-size="28" fill="#8b95a3">
+    Date: January 2024
+  </text>
+  
+  <text x="1520" y="880" font-family="Arial, sans-serif" font-size="28" fill="#8b95a3" text-anchor="end">
+    Certificate ID: SAMPLE-001
+  </text>
+  
+  <!-- Decorative elements -->
+  <circle cx="250" cy="250" r="40" fill="none" stroke="rgba(61, 212, 201, 0.3)" stroke-width="2"/>
+  <circle cx="1670" cy="250" r="40" fill="none" stroke="rgba(61, 212, 201, 0.3)" stroke-width="2"/>
+  <circle cx="250" cy="830" r="40" fill="none" stroke="rgba(61, 212, 201, 0.3)" stroke-width="2"/>
+  <circle cx="1670" cy="830" r="40" fill="none" stroke="rgba(61, 212, 201, 0.3)" stroke-width="2"/>
+  
+  <!-- Watermark -->
+  <text x="960" y="540" font-family="Arial, sans-serif" font-size="200" font-weight="bold" fill="rgba(61, 212, 201, 0.05)" text-anchor="middle">
+    SAMPLE
+  </text>
+</svg>
