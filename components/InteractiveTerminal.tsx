@@ -432,13 +432,7 @@ Type 'help' to see available commands.`,
               transition={{ duration: 0.3 }}
               className="overflow-hidden"
             >
-              <div
-                ref={terminalRef}
-                className="relative h-[calc(100%-3rem)] overflow-y-auto p-4 font-mono text-sm text-gray-300"
-                onClick={handleTerminalClick}
-              >
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent to-gray-900/30 z-10"></div>
-                {/* Command history */}
+              <div className="flex-1 overflow-y-auto p-4 font-mono text-sm">
                 <AnimatePresence initial={false}>
                   {history.map((item, index) => (
                     <motion.div
@@ -464,35 +458,38 @@ Type 'help' to see available commands.`,
                     </motion.div>
                   ))}
                 </AnimatePresence>
-                  placeholder="Type 'help' for commands..."
-                  spellCheck={false}
-                  autoComplete="off"
-                />
-                <span className="text-accent animate-pulse">█</span>
-              </motion.div>
 
-              {suggestionMatches.length > 0 && (
-                <div className="mt-2 text-[10px] text-dark-text-secondary">
-                  Suggestions: {suggestionMatches.join("  •  ")}
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-accent">$</span>
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    className="bg-transparent flex-1 outline-none text-dark-text"
+                    placeholder="Type 'help' for commands..."
+                    spellCheck={false}
+                    autoComplete="off"
+                    autoFocus
+                  />
+                  <span className="text-accent animate-pulse">█</span>
                 </div>
-              )}
 
-              <div className="mt-4 text-[10px] text-dark-text-secondary/50">
-                💡 Tip: Use ↑/↓ arrows for history, Tab for autocomplete
+                <div className="mt-4 text-[10px] text-dark-text-secondary/50">
+                  💡 Tip: Use ↑/↓ arrows for history, Tab for autocomplete
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="font-mono text-xs text-dark-text-secondary cursor-pointer hover:text-accent transition-colors"
-            onClick={() => setIsExpanded(true)}
-          >
-            <span className="text-accent">$</span> Interactive terminal - Click to
-            expand and type commands
-          </motion.div>
-        )}
+            </motion.div>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="font-mono text-xs text-dark-text-secondary cursor-pointer hover:text-accent transition-colors"
+              onClick={() => setIsExpanded(true)}
+            >
+              <span className="text-accent">$</span> Interactive terminal - Click to expand and type commands
+            </motion.div>
+          )}
       </AnimatePresence>
     </div>
   );
