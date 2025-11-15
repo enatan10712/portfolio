@@ -471,19 +471,6 @@ Type 'help' to see available commands.`,
                     spellCheck={false}
                     autoComplete="off"
                     autoFocus
-                  />
-                  <span className="text-accent animate-pulse">█</span>
-                </div>
-
-                <div className="mt-4 text-[10px] text-dark-text-secondary/50">
-                  💡 Tip: Use ↑/↓ arrows for history, Tab for autocomplete
-                </div>
-              </div>
-            </motion.div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
               className="font-mono text-xs text-dark-text-secondary cursor-pointer hover:text-accent transition-colors"
               onClick={() => setIsExpanded(true)}
             >
