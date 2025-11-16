@@ -7,6 +7,9 @@ import projectsData from "@/data/projects.json";
 
 const allProjects = projectsData;
 
+// Debug log to check projects data
+console.log('All Projects:', allProjects);
+
 const categories = ["All", "ML", "Security", "DevOps", "Visualization"];
 
 export default function ProjectsPage() {
