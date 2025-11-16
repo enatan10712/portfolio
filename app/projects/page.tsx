@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import ProjectCard from "@/components/ProjectCard";
 import projectsData from "@/data/projects.json";
 
+// Show all projects by default, regardless of the featured property
 const allProjects = projectsData;
 
 // Debug log to check projects data
@@ -15,12 +16,20 @@ const categories = ["All", "ML", "Security", "DevOps", "Visualization"];
 export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("All");
 
+  // Debug log for projects and categories
+  console.log('Active Filter:', activeFilter);
+  console.log('All Projects:', allProjects.map(p => ({ title: p.title, categories: p.category })));
+
   const filteredProjects =
     activeFilter === "All"
       ? allProjects
       : allProjects.filter((project) =>
-          project.category.includes(activeFilter)
+          project.category.some(cat => 
+            cat.toLowerCase() === activeFilter.toLowerCase()
+          )
         );
+  
+  console.log('Filtered Projects:', filteredProjects.map(p => p.title));
 
   return (
     <div className="min-h-screen">
