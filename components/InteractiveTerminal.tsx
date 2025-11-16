@@ -1,7 +1,5 @@
 "use client";
 
-"use client";
-
 import { useState, useRef, useEffect, useMemo, KeyboardEvent } from "react";
 import Link from "next/link";
 
@@ -39,6 +37,7 @@ Available commands:
   banner     - Show ASCII banner
 `,
   },
+
   about: {
     description: "About me",
     action: () => `
@@ -53,28 +52,15 @@ What I do:
 • 🚀 Create reliable systems that scale
 • 🛡️ Help teams fix security issues
 
-Certifications:
-• 🧠 Simplilearn SQL (#9191317) — 17 Oct 2025
-• 🐍 Python for Data Science (UC-68243772) — 01 Oct 2025
-• 🛠️ Simplilearn Programming Essentials (#9040069) — 24 Sep 2025
-• 🎓 EC-Council EHE (#188212) — 02 Jan 2023
-• 🔐 INSA Cyber Talent — Dec 2022
-• 🛡️ Udemy InfoSec — 15 Dec 2022
-• 🧩 CSS/Bootstrap + Python Stack (UC-b7567d76) — 11 Dec 2022
-• 🎨 Graphics & Video Masterclass (UC-d76c3f04) — 11 Dec 2022
-• 🔎 OSINT (SBT) — 15 Feb 2024 (ID #520813553)
-• 🐛 Android Bug Bounty (#294458) — 09 Feb 2024
-• 🌐 IP Addressing & Subnetting (UC-33ca777e) — 15 Dec 2022
-• 🕵️ Ethical Hacking Zero to Hero (UC-f8fd45ef) — 15 Dec 2022
-
 Journey:
 • 2025 (Aug 18): Started data science ✨
 • 2020 (COVID): Started web pentesting 🦠
 
-Location: Remote / Ethiopia 🌍
+Location: Ethiopia 🌍
 Status: Open to opportunities ✨
 `,
   },
+
   skills: {
     description: "Technical skills",
     action: () => `
@@ -89,43 +75,43 @@ Technical Skills:
 📊 Data Science  ████████████ Expert
 `,
   },
+
   projects: {
     description: "Featured projects",
     action: () => (
       <div>
         Featured Projects:
-        ─────────────────────────────────────
-        1. Forex Predictor - ML trading system (12% ROI)
-        2. Medical Diagnosis - 94% accuracy ML model
-        3. Security Scanner - OWASP Top 10 detection
+        <br />─────────────────────────────────────
+        <br />
+        1. Forex Predictor – ML trading system (12% ROI)
+        <br />
+        2. Medical Diagnosis – 94% accuracy ML model
+        <br />
+        3. Security Scanner – OWASP Top 10 detection
         <br />
         <br />
-        Type 'projects --details' for more info
+        Type <span className="text-accent">'projects --details'</span> for more info
         <br />
         Or visit{" "}
-        <a href="/projects" className="text-accent hover:underline">
+        <Link href="/projects" className="text-accent hover:underline">
           /projects
-        </a>
+        </Link>
       </div>
     ),
   },
+
   contact: {
     description: "Contact information",
     action: () => `
 Contact Information:
 ─────────────────────────────────────
 📧 Email:     enatan10712@gmail.com
-💼 LinkedIn:  linkedin.com/in/enatandereje
 🐙 GitHub:    github.com/enatandereje
+💼 LinkedIn:  linkedin.com/in/enatandereje
 ✈️  Telegram:  @enatandereje
-
-Available for:
-• Freelance Projects
-• Full-time Opportunities
-• Collaboration
-• Consulting
 `,
   },
+
   resume: {
     description: "Download resume",
     action: () => `
@@ -135,33 +121,33 @@ Downloading resume...
 Direct link: /resume.pdf
 `,
   },
+
   experience: {
     description: "Work experience",
     action: () => `
 Experience:
 ─────────────────────────────────────
 2021-Present  Data Scientist
-              Building ML models and data pipelines
-
 2020-2022     Security Researcher
-              Penetration testing & vulnerability research
-
 2019-2021     Full Stack Developer
-              React, Node.js, Python applications
 `,
   },
+
   whoami: {
     description: "Current user",
     action: () => "root",
   },
+
   date: {
     description: "Show current date",
     action: () => new Date().toString(),
   },
+
   clear: {
     description: "Clear terminal",
     action: () => "",
   },
+
   banner: {
     description: "Show ASCII banner",
     action: () => ASCII_ART,
@@ -183,99 +169,71 @@ Type 'help' to see available commands.`,
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [sessionTime, setSessionTime] = useState<string | null>(null);
+
   const availableCommands = useMemo(
     () => Array.from(new Set([...Object.keys(COMMANDS), "history"])),
     []
   );
+
   const baseInput = input.trim();
+
   const suggestionMatches = useMemo(() => {
-    const normalized = baseInput.toLowerCase();
-    const hasSpace = baseInput.includes(" ");
-    if (!normalized || hasSpace) {
-      return [] as string[];
-    }
-    return availableCommands
-      .filter((cmd) => cmd.startsWith(normalized) && cmd !== normalized)
-      .slice(0, 4);
+    const n = baseInput.toLowerCase();
+    if (!n || baseInput.includes(" ")) return [];
+    return availableCommands.filter((cmd) => cmd.startsWith(n) && cmd !== n).slice(0, 4);
   }, [availableCommands, baseInput]);
 
   useEffect(() => {
-    if (isExpanded && inputRef.current) {
-      inputRef.current.focus();
-    }
+    if (isExpanded && inputRef.current) inputRef.current.focus();
   }, [isExpanded]);
 
   useEffect(() => {
-    const updateTime = () => setSessionTime(new Date().toLocaleTimeString());
-    updateTime();
-    const interval = setInterval(updateTime, 60000);
-    return () => clearInterval(interval);
+    const update = () => setSessionTime(new Date().toLocaleTimeString());
+    update();
+    const i = setInterval(update, 60000);
+    return () => clearInterval(i);
   }, []);
 
   useEffect(() => {
-    if (terminalRef.current) {
+    if (terminalRef.current)
       terminalRef.current.scrollTop = terminalRef.current.scrollHeight;
-    }
   }, [history]);
 
   const executeCommand = (cmd: string) => {
-    const normalizedInput = cmd.trim();
-    const trimmedCmd = normalizedInput.toLowerCase();
-
-    if (!trimmedCmd) {
-      return;
-    }
+    const trimmed = cmd.trim().toLowerCase();
+    if (!trimmed) return;
 
     const nextHistory = [...commandHistory, cmd];
     setCommandHistory(nextHistory);
     setHistoryIndex(-1);
 
-    if (trimmedCmd.startsWith("echo ")) {
-      const text = cmd.substring(5);
-      setHistory((prev) => [
-        ...prev,
-        { command: cmd, output: text },
-      ]);
+    if (trimmed.startsWith("echo ")) {
+      setHistory((prev) => [...prev, { command: cmd, output: cmd.substring(5) }]);
       return;
     }
 
-    if (trimmedCmd === "clear") {
+    if (trimmed === "clear") {
       setHistory([]);
       return;
     }
 
-    if (trimmedCmd === "history") {
-      const historyOutput = nextHistory.length
-        ? nextHistory.map((entry, idx) => `${idx + 1}. ${entry}`).join("\n")
-        : "No commands executed yet.";
-      setHistory((prev) => [
-        ...prev,
-        { command: cmd, output: historyOutput },
-      ]);
+    if (trimmed === "history") {
+      const body = nextHistory
+        .map((h, i) => `${i + 1}. ${h}`)
+        .join("\n");
+      setHistory((p) => [...p, { command: cmd, output: body }]);
       return;
     }
 
-    const command = COMMANDS[trimmedCmd];
+    const command = COMMANDS[trimmed];
     if (command) {
-      const output = command.action();
-      setHistory((prev) => [
-        ...prev,
-        { command: cmd, output },
-      ]);
+      setHistory((p) => [...p, { command: cmd, output: command.action() }]);
     } else {
-      setHistory((prev) => [
-        ...prev,
-        {
-          command: cmd,
-          output: `Command not found: ${cmd}\nType 'help' for available commands.`,
-        },
+      setHistory((p) => [
+        ...p,
+        { command: cmd, output: `Command not found: ${cmd}\nType 'help' for available commands.` },
       ]);
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value;
-    setInput(newValue);
   };
 
   const handleKey = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -284,10 +242,11 @@ Type 'help' to see available commands.`,
       setInput("");
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      if (commandHistory.length > 0) {
-        const newIndex = historyIndex === -1 
-          ? commandHistory.length - 1 
-          : Math.max(0, historyIndex - 1);
+      if (commandHistory.length) {
+        const newIndex =
+          historyIndex === -1
+            ? commandHistory.length - 1
+            : Math.max(0, historyIndex - 1);
         setHistoryIndex(newIndex);
         setInput(commandHistory[newIndex]);
       }
@@ -305,29 +264,15 @@ Type 'help' to see available commands.`,
       }
     } else if (e.key === "Tab") {
       e.preventDefault();
-      const normalized = baseInput.toLowerCase();
-      const hasSpace = baseInput.includes(" ");
-      if (!normalized || hasSpace) {
-        return;
-      }
-      const matches = availableCommands.filter((cmd) => cmd.startsWith(normalized));
-      if (matches.length === 1) {
-        setInput(matches[0]);
-      } else if (matches.length > 1) {
-        setHistory((prev) => [
-          ...prev,
-          {
-            command: input,
-            output: `Possible commands: ${matches.join(", ")}`,
-          },
+      const matches = availableCommands.filter((cmd) =>
+        cmd.startsWith(baseInput.toLowerCase())
+      );
+      if (matches.length === 1) setInput(matches[0]);
+      else if (matches.length > 1)
+        setHistory((p) => [
+          ...p,
+          { command: input, output: `Possible commands: ${matches.join(", ")}` },
         ]);
-      }
-    }
-  };
-
-  const handleTerminalClick = () => {
-    if (!isExpanded) {
-      setIsExpanded(true);
     }
   };
 
@@ -337,33 +282,81 @@ Type 'help' to see available commands.`,
         className={`relative bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden transition-all duration-300 ${
           isExpanded ? "h-[600px]" : "h-12 hover:h-16"
         }`}
+        onClick={() => !isExpanded && setIsExpanded(true)}
       >
+        {/* Header */}
         <div className="flex items-center justify-between p-3">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 cursor-pointer"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 cursor-pointer"></div>
-              <div 
-                className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 cursor-pointer"
+              <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+              <div
+                className="w-3 h-3 rounded-full bg-green-500/80 cursor-pointer"
                 onClick={() => setIsExpanded(!isExpanded)}
               ></div>
             </div>
-            <span className="text-xs text-gray-300 font-mono ml-2">enatan@portfolio:~$</span>
+            <span className="text-xs text-gray-300 font-mono ml-2">
+              enatan@portfolio:~$
+            </span>
           </div>
+
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-xs text-accent hover:text-accent-hover transition-colors font-mono"
+            className="text-xs text-accent font-mono"
           >
             {isExpanded ? "[close]" : "[expand]"}
           </button>
         </div>
 
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-gray-300 font-mono">session: live</span>
-            <span className="text-xs text-gray-300 font-mono">user: root</span>
-            <span className="text-xs text-gray-300 font-mono">host: enatan.dev</span>
-            <span className="text-xs text-gray-300 font-mono">time: {sessionTime}</span>
+        {/* INFO BAR */}
+        {isExpanded && (
+          <div className="flex items-center gap-4 px-3 mb-2 text-xs text-gray-300 font-mono flex-wrap">
+            <span>session: live</span>
+            <span>user: root</span>
+            <span>host: enatan.dev</span>
+            <span>time: {sessionTime}</span>
           </div>
-        </div>
+        )}
 
+        {/* TERMINAL BODY */}
+        {isExpanded && (
+          <div
+            ref={terminalRef}
+            className="px-3 pb-4 overflow-y-auto h-[480px] space-y-3 font-mono text-sm text-gray-200"
+          >
+            {history.map((entry, idx) => (
+              <div key={idx}>
+                {entry.command && (
+                  <div className="text-accent">
+                    root@enatan.dev:~$ {entry.command}
+                  </div>
+                )}
+                <pre className="whitespace-pre-wrap">{entry.output}</pre>
+              </div>
+            ))}
+
+            {/* INPUT */}
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-accent">root@enatan.dev:~$</span>
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKey}
+                className="bg-transparent outline-none flex-1"
+                autoFocus
+              />
+            </div>
+
+            {/* SUGGESTIONS */}
+            {suggestionMatches.length > 0 && (
+              <div className="text-gray-400 text-xs mt-1">
+                Suggestions: {suggestionMatches.join(", ")}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
