@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, useMemo, KeyboardEvent, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+"use client";
+
+import { useState, useRef, useEffect, useMemo, KeyboardEvent } from "react";
 import Link from "next/link";
-// Sound functions removed
-import { TerminalEffects, TerminalGlowEffect, TerminalPulseEffect } from "./TerminalEffects";
 
 interface HistoryItem {
   command: string;
@@ -184,8 +183,6 @@ Type 'help' to see available commands.`,
   const inputRef = useRef<HTMLInputElement>(null);
   const terminalRef = useRef<HTMLDivElement>(null);
   const [sessionTime, setSessionTime] = useState<string | null>(null);
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [errorShake, setErrorShake] = useState(false);
   const availableCommands = useMemo(
     () => Array.from(new Set([...Object.keys(COMMANDS), "history"])),
     []
@@ -226,7 +223,6 @@ Type 'help' to see available commands.`,
     const trimmedCmd = normalizedInput.toLowerCase();
 
     if (!trimmedCmd) {
-      // Sound effect removed
       return;
     }
 
@@ -234,7 +230,6 @@ Type 'help' to see available commands.`,
     setCommandHistory(nextHistory);
     setHistoryIndex(-1);
 
-    // Handle echo command
     if (trimmedCmd.startsWith("echo ")) {
       const text = cmd.substring(5);
       setHistory((prev) => [
@@ -244,7 +239,6 @@ Type 'help' to see available commands.`,
       return;
     }
 
-    // Handle clear command
     if (trimmedCmd === "clear") {
       setHistory([]);
       return;
@@ -261,50 +255,30 @@ Type 'help' to see available commands.`,
       return;
     }
 
-    // Execute command
     const command = COMMANDS[trimmedCmd];
     if (command) {
       const output = command.action();
-      setErrorShake(false);
-      playSuccessSound();
-      
-      // Add a small delay for visual feedback
-      setTimeout(() => {
-        setHistory((prev) => [
-          ...prev,
-          { command: cmd, output },
-        ]);
-      }, 50);
+      setHistory((prev) => [
+        ...prev,
+        { command: cmd, output },
+      ]);
     } else {
-      setErrorShake(true);
-      playErrorSound();
-      
-      // Shake animation and error sound
-      setTimeout(() => setErrorShake(false), 320);
-      
-      // Add a small delay for visual feedback
-      setTimeout(() => {
-        setHistory((prev) => [
-          ...prev,
-          {
-            command: cmd,
-            output: `Command not found: ${cmd}\nType 'help' for available commands.`,
-          },
-        ]);
-      }, 100);
+      setHistory((prev) => [
+        ...prev,
+        {
+          command: cmd,
+          output: `Command not found: ${cmd}\nType 'help' for available commands.`,
+        },
+      ]);
     }
   };
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
-    if (newValue.length > input.length) {
-      // Typing sound effects removed
-    }
     setInput(newValue);
-  }, [input]);
+  };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    // Sound effects for key presses removed
+  const handleKey = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       executeCommand(input);
       setInput("");
@@ -353,110 +327,43 @@ Type 'help' to see available commands.`,
 
   const handleTerminalClick = () => {
     if (!isExpanded) {
-      // Sound effect removed
       setIsExpanded(true);
     }
   };
 
   return (
-    <div className="relative w-full max-w-3xl mx-auto group">
+    <div className="w-full max-w-3xl mx-auto group">
       <div
         className={`relative bg-gray-900/80 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden transition-all duration-300 ${
           isExpanded ? "h-[600px]" : "h-12 hover:h-16"
-        } ${errorShake ? 'animate-shake' : ''}`}
-        style={{
-          '--tw-shadow': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
-          '--tw-shadow-colored': '0 10px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color)'
-        } as React.CSSProperties & { [key: `--${string}`]: string }}
+        }`}
       >
-        <TerminalGlowEffect />
-        <TerminalPulseEffect />
-        <TerminalEffects isActive={isExpanded} />
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between p-3">
           <div className="flex items-center gap-2">
             <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 cursor-pointer transition-colors"></div>
-              <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 cursor-pointer transition-colors"></div>
-              <div
-                className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 cursor-pointer transition-colors"
+              <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 cursor-pointer"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 cursor-pointer"></div>
+              <div 
+                className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 cursor-pointer"
                 onClick={() => setIsExpanded(!isExpanded)}
               ></div>
             </div>
-            <span className="text-xs text-dark-text-secondary ml-2 font-mono">
-              enatan@portfolio:~$
-            </span>
+            <span className="text-xs text-gray-300 font-mono ml-2">enatan@portfolio:~$</span>
           </div>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-xs text-accent hover:text-accent-hover transition-colors font-mono"
-            aria-label={isExpanded ? "Collapse terminal" : "Expand terminal"}
           >
             {isExpanded ? "[close]" : "[expand]"}
           </button>
         </div>
 
-        <div className="flex flex-wrap gap-4 text-[11px] text-dark-text-secondary/80 font-mono mb-3">
-          <span>session: live</span>
-          <span>user: root</span>
-          <span>host: enatan.dev</span>
-          <span>time: {sessionTime}</span>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-gray-300 font-mono">session: live</span>
+            <span className="text-xs text-gray-300 font-mono">user: root</span>
+            <span className="text-xs text-gray-300 font-mono">host: enatan.dev</span>
+            <span className="text-xs text-gray-300 font-mono">time: {sessionTime}</span>
+          </div>
         </div>
 
-        <AnimatePresence initial={false}>
-          {isExpanded ? (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
-              <div className="flex-1 overflow-y-auto p-4 font-mono text-sm">
-                <AnimatePresence initial={false}>
-                  {history.map((item, index) => (
-                    <motion.div
-                      key={`${item.command}-${index}`}
-                      layout
-                      initial={{ opacity: 0, y: 18 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="mb-3"
-                    >
-                      {item.command && (
-                        <div className="flex items-start gap-2">
-                          <span className="text-accent">$</span>
-                          <span className="text-dark-text">{item.command}</span>
-                        </div>
-                      )}
-                      {item.output && (
-                        <div className="text-dark-text-secondary whitespace-pre-wrap ml-4 mt-1">
-                          {item.output}
-                        </div>
-                      )}
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="text-accent">$</span>
-                  <input
-                    ref={inputRef}
-                    value={input}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    className="bg-transparent flex-1 outline-none text-dark-text"
-                    placeholder="Type 'help' for commands..."
-                    spellCheck={false}
-                    autoComplete="off"
-                    autoFocus
-              className="font-mono text-xs text-dark-text-secondary cursor-pointer hover:text-accent transition-colors"
-              onClick={() => setIsExpanded(true)}
-            >
-              <span className="text-accent">$</span> Interactive terminal - Click to expand and type commands
-            </motion.div>
-          )}
-      </AnimatePresence>
-    </div>
-  );
-}
