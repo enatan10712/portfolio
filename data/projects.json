@@ -22,17 +22,22 @@
     "featured": true
   },
   {
-    "title": "osint ",
-    "slug": "osint-",
-    "summary": "osint GOD EYE",
+    "title": "OSINT Toolkit",
+    "slug": "osint-toolkit",
+    "summary": "Comprehensive OSINT (Open Source Intelligence) toolkit for information gathering and security research.",
     "tech": [
-      "oosin't-GOD-EYE"
+      "React",
+      "TypeScript",
+      "Next.js",
+      "TailwindCSS",
+      "OSINT Tools"
     ],
     "category": [
-      ""
+      "Security"
     ],
-    "github": "https://github.com/enatan10712/portfolio.git",
+    "github": "https://github.com/enatan10712/osint-toolkit",
     "demo": "https://osint-toolkit-v3.vercel.app",
-    "featured": false
+    "image": "/projects/osint-toolkit.jpg",
+    "featured": true
   }
 ]
