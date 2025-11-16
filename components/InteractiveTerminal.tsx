@@ -50,7 +50,14 @@ export default function InteractiveTerminal() {
     if (raw) {
       try { return JSON.parse(raw); } catch { return []; }
     }
-    return [{ command: "", output: "Welcome to Enatan's Portfolio Terminal! Type 'help' to see commands.", animated: false }];
+    const welcomeMessage = `
+╔══════════════════════════════════════════╗
+║   Welcome to Enatan's Portfolio Terminal! ║
+║   Last login: ${new Date().toLocaleString()}    ║
+╚══════════════════════════════════════════╝
+
+Type 'help' to see available commands.`;
+    return [{ command: "", output: welcomeMessage, animated: true }];
   });
   const [commandHistory, setCommandHistory] = useState<string[]>(() => {
     const raw = lsGet("enatan_terminal_cmds");
@@ -77,7 +84,26 @@ export default function InteractiveTerminal() {
   // Commands
   const COMMANDS = useMemo(() => {
     return {
-      help: () => `Available commands: help, about, skills, projects, contact, resume, experience, clear, whoami, history, date, echo, banner, theme, sudo, sysinfo, users`,
+      help: () => `Available commands (type 'help <command>' for details):
+  • help       - Show this help message
+  • about      - About me
+  • skills     - My technical skills
+  • projects   - View my projects
+  • contact    - Contact information
+  • resume     - Download my resume
+  • experience - Work experience
+  • clear      - Clear terminal
+  • theme      - Change terminal theme
+  • whoami     - Show current user
+  • date       - Show current date & time
+  • history    - Command history
+  • banner     - Show welcome banner
+  • sysinfo    - System information`,
+      'help about': () => 'about - Displays information about me, my background, and current focus.',
+      'help skills': () => 'skills - Lists my technical skills and areas of expertise.',
+      'help projects': () => 'projects - Shows information about my featured projects.',
+      'help contact': () => 'contact - Displays my contact information.',
+      'help theme': () => 'theme [name] - Change terminal theme. Available themes: ' + Object.keys(THEMES).join(', '),
       about: () => `Enatan Dereje\nData Scientist • Web Pentester • Developer\nLocation: Ethiopia\nOpen to opportunities`,
       skills: () => `Python, React, Security, ML/AI, Docker, AWS, Data Science`,
       projects: () => (
@@ -193,7 +219,7 @@ export default function InteractiveTerminal() {
   };
 
   // Typewriter output
-  const RenderOutput: React.FC<{ item: HistoryItem }> = ({ item }) => {
+  const renderOutput = (item: HistoryItem, index: number) => {
     const [visibleText, setVisibleText] = useState<string>(typeof item.output === "string" ? "" : "");
     useEffect(() => {
       let mounted = true;
@@ -214,20 +240,72 @@ export default function InteractiveTerminal() {
     <div className={`fixed z-40 w-[min(98vw,900px)] max-w-3xl`} style={{ left: position.x, top: position.y }}>
       <div className={`rounded-lg overflow-hidden shadow-lg transition-all duration-200 ${theme.bg}`} style={{ boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
         {/* Header */}
-        <div ref={dragRef} className={`flex items-center justify-between px-3 py-2 cursor-grab select-none`} onDoubleClick={() => setIsExpanded(s => !s)}>
-          <div className="flex items-center gap-3">
-            <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-500/80" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-              <div className="w-3 h-3 rounded-full bg-green-500/80" />
+        <div 
+          ref={dragRef} 
+          className={`flex items-center justify-between px-4 py-3 cursor-grab select-none bg-gray-900/90`} 
+          onDoubleClick={() => setIsExpanded(s => !s)}
+        >
+          <div className="flex items-center space-x-2">
+            <div className="flex space-x-1.5 mr-3">
+              <div className="w-3 h-3 rounded-full bg-red-500/90 hover:bg-red-400 transition-colors" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500/90 hover:bg-yellow-400 transition-colors" />
+              <div className="w-3 h-3 rounded-full bg-green-500/90 hover:bg-green-400 transition-colors" />
             </div>
-            <div className={`font-mono text-sm ${theme.text}`}>enatan@portfolio:~$</div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className={`text-xs font-mono ${theme.secondary}`}>theme: {themeKey}</div>
-            <button onClick={() => setIsExpanded(s => !s)} className={`text-xs font-mono ${theme.text} px-2 py-1 rounded hover:opacity-90`}>
-              {isExpanded ? "[close]" : "[expand]"}
-            </button>
+            <div className={`p-4 font-mono text-sm ${theme.text} overflow-y-auto terminal-scrollbar`} 
+              style={{ 
+                height: isExpanded ? '70vh' : '400px',
+                background: 'rgba(17, 24, 39, 0.6)',
+                backgroundImage: 'linear-gradient(to bottom, rgba(255,255,255,0.02) 0%, transparent 1px, transparent 100%)',
+                backgroundSize: '100% 1.5em',
+                backgroundPosition: '0 0.5em',
+                lineHeight: '1.5em'
+              }}
+            >
+              <div className="space-y-2">
+                {history.map((item, i) => (
+                  <div key={i} className="terminal-line">
+                    {item.command && (
+                      <div className="flex items-start">
+                        <span className="text-green-400">$</span>
+                        <span className="ml-2 text-gray-300">{item.command}</span>
+                      </div>
+                    )}
+                    {renderOutput(item, i)}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center mt-4">
+                <div className="relative flex-1 group">
+                  <div className="absolute inset-0 bg-accent/10 rounded opacity-0 group-focus-within:opacity-100 transition-opacity"></div>
+                  <div className="flex items-center relative">
+                    <span className="text-green-400">$</span>
+                    <div className="relative flex-1 ml-2">
+                      <input
+                        ref={inputRef}
+                        type="text"
+                        value={input}
+                        onChange={(e) => {
+                          setInput(e.target.value);
+                          setShowSuggestions(true);
+                        }}
+                        className="w-full bg-transparent border-none outline-none text-gray-100 placeholder-gray-500 caret-green-400"
+                        placeholder="Type 'help' for commands"
+                        spellCheck={false}
+                        autoComplete="off"
+                        onKeyDown={onKeyDown}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className={`flex items-center gap-3`}>
+              <div className={`text-xs font-mono ${theme.secondary}`}>theme: {themeKey}</div>
+              <button onClick={() => setIsExpanded(s => !s)} className={`text-xs font-mono ${theme.text} px-2 py-1 rounded hover:opacity-90`}>
+                {isExpanded ? "[close]" : "[expand]"}
+              </button>
+            </div>
           </div>
         </div>
 
