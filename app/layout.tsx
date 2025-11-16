@@ -18,23 +18,28 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "Enatan Dereje — Data Scientist • Web Pentester • Developer",
-  description: "Building machine learning models, cleaning large datasets, and testing websites for security problems. Creating reliable systems that scale.",
+  description:
+    "Building machine learning models, cleaning large datasets, and testing websites for security problems. Creating reliable systems that scale.",
   keywords: [
-    "Data Science", "Machine Learning", "Web Security", 
-    "Penetration Testing", "ML Pipelines", "Security Assessment", 
-    "Pentest Reports", "Reproducible Experiments"
+    "Data Science",
+    "Machine Learning",
+    "Web Security",
+    "Penetration Testing",
+    "ML Pipelines",
+    "Security Assessment",
+    "Pentest Reports",
+    "Reproducible Experiments",
   ],
   authors: [{ name: "Enatan Dereje" }],
   openGraph: {
     title: "Enatan Dereje — Data Scientist • Web Pentester • Developer",
-    description: "Building ML models. Testing websites for security. Creating reliable systems that scale.",
+    description:
+      "Building ML models. Testing websites for security. Creating reliable systems that scale.",
     type: "website",
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans`}>
@@ -51,4 +56,8 @@ export default function RootLayout({
             </main>
             <Footer />
           </div>
-        </ThemeProvi
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}
