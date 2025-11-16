@@ -299,6 +299,7 @@ Type 'help' to see available commands.`,
     const newValue = e.target.value;
     if (newValue.length > input.length) {
       // Typing sound effects removed
+    }
     setInput(newValue);
   }, [input]);
 
