@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playClickSound, playNotificationSound } from '@/lib/sounds';
 
 export function TerminalEffects({ isActive = true }: { isActive?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -22,20 +21,18 @@ export function TerminalEffects({ isActive = true }: { isActive?: boolean }) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Set canvas size
     const resizeCanvas = () => {
       canvas.width = canvas.offsetWidth;
       canvas.height = canvas.offsetHeight;
     };
 
-    // Initialize particles
     const initParticles = () => {
       particlesRef.current = [];
       const colors = [
-        'rgba(16, 185, 129, 0.6)', // teal
-        'rgba(99, 102, 241, 0.6)', // indigo
-        'rgba(236, 72, 153, 0.6)', // pink
-        'rgba(245, 158, 11, 0.6)', // amber
+        'rgba(16, 185, 129, 0.6)',
+        'rgba(99, 102, 241, 0.6)',
+        'rgba(236, 72, 153, 0.6)',
+        'rgba(245, 158, 11, 0.6)',
       ];
 
       for (let i = 0; i < 20; i++) {
@@ -50,30 +47,18 @@ export function TerminalEffects({ isActive = true }: { isActive?: boolean }) {
       }
     };
 
-    // Animation loop
     let animationFrameId: number;
     const animate = () => {
-      if (!ctx) return;
-      
-      // Clear canvas with slight fade effect
       ctx.fillStyle = 'rgba(17, 24, 39, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Update and draw particles
-      particlesRef.current.forEach((particle, index) => {
-        // Update position
+      particlesRef.current.forEach((particle) => {
         particle.x += particle.speedX;
         particle.y += particle.speedY;
 
-        // Bounce off edges
-        if (particle.x < 0 || particle.x > canvas.width) {
-          particle.speedX *= -1;
-        }
-        if (particle.y < 0 || particle.y > canvas.height) {
-          particle.speedY *= -1;
-        }
+        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1;
+        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
         ctx.fillStyle = particle.color;
@@ -83,13 +68,11 @@ export function TerminalEffects({ isActive = true }: { isActive?: boolean }) {
       animationFrameId = requestAnimationFrame(animate);
     };
 
-    // Handle window resize
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     initParticles();
     animate();
 
-    // Cleanup
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       cancelAnimationFrame(animationFrameId);
@@ -98,10 +81,7 @@ export function TerminalEffects({ isActive = true }: { isActive?: boolean }) {
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      <canvas
-        ref={canvasRef}
-        className="w-full h-full opacity-30"
-      />
+      <canvas ref={canvasRef} className="w-full h-full opacity-30" />
     </div>
   );
 }
