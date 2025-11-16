@@ -33,7 +33,7 @@
       "OSINT Tools"
     ],
     "category": [
-      "Security"
+      "security"
     ],
     "github": "https://github.com/enatan10712/osint-toolkit",
     "demo": "https://osint-toolkit-v3.vercel.app",
