@@ -3,13 +3,7 @@
 import { useState, useRef, useEffect, useMemo, KeyboardEvent, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { 
-  playTypingSound, 
-  playSuccessSound, 
-  playErrorSound, 
-  playClickSound,
-  playNotificationSound 
-} from "@/lib/sounds";
+// Sound functions removed
 import { TerminalEffects, TerminalGlowEffect, TerminalPulseEffect } from "./TerminalEffects";
 
 interface HistoryItem {
@@ -232,7 +226,7 @@ Type 'help' to see available commands.`,
     const trimmedCmd = normalizedInput.toLowerCase();
 
     if (!trimmedCmd) {
-      playClickSound();
+      // Sound effect removed
       return;
     }
 
@@ -304,28 +298,12 @@ Type 'help' to see available commands.`,
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     if (newValue.length > input.length) {
-      playTypingSound();
-      
-      // Play a subtle click sound on space or special characters
-      const lastChar = newValue.slice(-1);
-      if (/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>/? ]/.test(lastChar)) {
-        playClickSound();
-      }
-    }
+      // Typing sound effects removed
     setInput(newValue);
   }, [input]);
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    // Play sound for enter key
-    if (e.key === 'Enter' && input.trim()) {
-      playClickSound();
-      
-      // Show a small notification sound for special commands
-      const trimmedInput = input.trim().toLowerCase();
-      if (['help', 'clear', 'banner'].includes(trimmedInput)) {
-        playNotificationSound();
-      }
-    }
+    // Sound effects for key presses removed
     if (e.key === "Enter") {
       executeCommand(input);
       setInput("");
@@ -374,7 +352,7 @@ Type 'help' to see available commands.`,
 
   const handleTerminalClick = () => {
     if (!isExpanded) {
-      playClickSound();
+      // Sound effect removed
       setIsExpanded(true);
     }
   };
@@ -388,7 +366,7 @@ Type 'help' to see available commands.`,
         style={{
           '--tw-shadow': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
           '--tw-shadow-colored': '0 10px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color)'
-        } as React.CSSProperties}
+        } as React.CSSProperties & { [key: `--${string}`]: string }}
       >
         <TerminalGlowEffect />
         <TerminalPulseEffect />
