@@ -3,6 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import projectsData from "@/data/projects.json";
 
+// This function generates the static params at build time
+export async function generateStaticParams() {
+  return projectsData.map((project) => ({
+    slug: project.slug,
+  }));
+}
+
+export const dynamicParams = false; // Ensure only statically generated pages are shown
+
 // Convert the projects array to a record with slugs as keys
 const projects = projectsData.reduce((acc, project) => {
   acc[project.slug] = {
