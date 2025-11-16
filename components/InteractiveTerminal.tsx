@@ -11,8 +11,22 @@ interface HistoryItem {
   animated?: boolean;
 }
 
-const ASCII_ART = `...`; // keep your ASCII art
-const THEMES = { /* keep your theme object */ };
+const ASCII_ART = `
+███████╗███╗   ██╗ █████╗ ████████╗ █████╗ ███╗   ██╗
+██╔════╝████╗  ██║██╔══██╗╚══██╔══╝██╔══██╗████╗  ██║
+█████╗  ██╔██╗ ██║███████║   ██║   ███████║██╔██╗ ██║
+██╔══╝  ██║╚██╗██║██╔══██║   ██║   ██╔══██║██║╚██╗██║
+███████╗██║ ╚████║██║  ██║   ██║   ██║  ██║██║ ╚████║
+╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═══╝
+`;
+
+const THEMES: Record<string, { bg: string; accent: string; text: string; secondary: string }> = {
+  default: { bg: "bg-gray-900", accent: "#6ee7b7", text: "text-gray-100", secondary: "text-gray-400" },
+  dracula: { bg: "bg-[#282a36]", accent: "#bd93f9", text: "text-[#f8f8f2]", secondary: "text-[#6272a4]" },
+  neon: { bg: "bg-[#050406]", accent: "#00f5ff", text: "text-[#e6f7ff]", secondary: "#8bdcff" },
+  matrix: { bg: "bg-[#07190b]", accent: "#00ff41", text: "#dfffd8", secondary: "#6fbf6f" },
+  nord: { bg: "bg-[#2e3440]", accent: "#88c0d0", text: "#eceff4", secondary: "#93a3b3" },
+};
 
 // Safe localStorage helpers
 const lsGet = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
@@ -69,7 +83,7 @@ export default function InteractiveTerminal() {
     dragging: false, startX: 0, startY: 0, origX: 0, origY: 0,
   });
 
-  const theme = THEMES[themeKey] || THEMES.default;
+  const theme = THEMES[themeKey] || THEMES["default"];
 
   // Persist history
   useEffect(() => lsSet("enatan_terminal_history", JSON.stringify(history)), [history]);
@@ -111,7 +125,6 @@ export default function InteractiveTerminal() {
     };
   }, [position]);
 
-  // Example command execution (add your full COMMANDS here)
   const executeCommand = useCallback((rawInput: string) => {
     const trimmed = rawInput.trim();
     if (!trimmed) return;
