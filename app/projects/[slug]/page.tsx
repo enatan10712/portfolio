@@ -1,117 +1,24 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import projectsData from "@/data/projects.json";
 
-// This would normally come from a database or CMS
-const projects: Record<string, any> = {
-  "banking-platform": {
-    title: "Digital Banking Platform",
-    summary:
-      "Full-stack banking system enabling secure customer onboarding, real-time transfers, and audit trails across FastAPI and a React admin console.",
-    problem:
-      "Retail banks need a secure digital channel that enforces role-based access, transaction auditing, and real-time balance accuracy without sacrificing developer velocity.",
-    approach:
-      "Designed a service-oriented FastAPI backend with SQLAlchemy models over MySQL, JWT-secured auth, and CORS-controlled APIs. Paired it with a Vite + React + TypeScript frontend that consumes admin/user endpoints, featuring guarded routes, React Query caching, and Tailwind-driven UI components.",
-    tools: [
-      "FastAPI",
-      "Python",
-      "MySQL",
-      "SQLAlchemy",
-      "Alembic",
-      "React",
-      "TypeScript",
-      "Vite",
-      "TailwindCSS",
-      "React Query"
-    ],
-    results: [
-      "Implements end-to-end money movement with transfer status tracking and balance reconciliation.",
-      "Role-based admin console with live user management, activation toggles, and role reassignment.",
-      "Auditable transaction history via dedicated logging tables wire-compatible with BI tooling."
-    ],
-    howToReproduce: `
-1. Start the FastAPI backend:
-   cd portfolio projects/banking/backend
-   python -m venv .venv
-   .\\.venv\\Scripts\\activate
-   pip install -r requirements.txt
-   uvicorn app.main:app --reload
-
-2. Prepare the MySQL schema:
-   - Execute the SQL in backend/README.md to create enums, tables, and seed users.
-   - Configure .env with database credentials matching your MySQL instance.
-
-3. Launch the React admin frontend:
-   cd ../frontend
-   npm install
-   cp .env.local.sample .env.local
-   # set VITE_API_BASE_URL to the FastAPI endpoint
-   npm run dev
-
-4. Sign in with the seeded admin account to manage users, accounts, and transfers in real time.
-    `,
-  },
-  "forex-predictor": {
-    title: "Forex Predictor (end-to-end)",
-    summary: "Backtested signal generation for FX pairs — 12% annualized return on historical test set.",
-    problem: "Foreign exchange markets are highly volatile and difficult to predict. Traditional technical analysis alone often fails to capture complex market dynamics.",
-    approach: "Built an end-to-end ML pipeline combining feature engineering from technical indicators, sentiment analysis, and ensemble learning. Implemented rigorous backtesting framework to validate signals.",
-    tools: ["Python", "Pandas", "XGBoost", "LightGBM", "Streamlit", "Docker", "PostgreSQL"],
-    results: [
-      "12% annualized return on 2-year historical backtest",
-      "Sharpe ratio of 1.8, demonstrating risk-adjusted performance",
-      "Deployed as interactive Streamlit dashboard for real-time signals",
-    ],
-    github: "https://github.com/enatandereje/forex-predictor",
-    demo: "https://forex-predictor-demo.streamlit.app",
-    howToReproduce: `
-1. Clone the repository:
-   \`git clone https://github.com/enatandereje/forex-predictor.git\`
-
-2. Install dependencies:
-   \`pip install -r requirements.txt\`
-
-3. Download historical data:
-   \`python scripts/download_data.py --pairs EURUSD,GBPUSD\`
-
-4. Train models:
-   \`python train.py --config configs/ensemble.yaml\`
-
-5. Run backtest:
-   \`python backtest.py --start 2020-01-01 --end 2022-12-31\`
-
-6. Launch dashboard:
-   \`streamlit run app.py\`
-    `,
-  },
-  "medical-diagnosis": {
-    title: "Medical Diagnosis Predictor",
-    summary: "ML model for disease prediction based on symptoms with 94% accuracy.",
-    problem: "Early disease detection is critical but access to specialists is limited in many regions. Need for automated preliminary diagnosis tool.",
-    approach: "Created a multi-class classification model using ensemble methods. Implemented comprehensive data preprocessing, feature selection, and hyperparameter tuning.",
-    tools: ["Python", "Scikit-learn", "Flask", "Docker", "Pandas", "NumPy"],
-    results: [
-      "94% accuracy across 15 disease categories",
-      "False negative rate < 3% for critical conditions",
-      "RESTful API serving 1000+ predictions/day in production",
-    ],
-    github: "https://github.com/enatandereje/medical-diagnosis",
-    howToReproduce: `
-1. Clone and setup:
-   \`git clone https://github.com/enatandereje/medical-diagnosis.git\`
-   \`cd medical-diagnosis && pip install -r requirements.txt\`
-
-2. Prepare data:
-   \`python data/prepare_dataset.py\`
-
-3. Train model:
-   \`python train.py --model ensemble\`
-
-4. Run API:
-   \`python api/app.py\`
-    `,
-  },
-};
+// Convert the projects array to a record with slugs as keys
+const projects = projectsData.reduce((acc, project) => {
+  acc[project.slug] = {
+    title: project.title,
+    summary: project.summary,
+    problem: "Detailed problem statement not available.",
+    approach: "Detailed approach not available.",
+    tools: project.tech || [],
+    results: ["Project details coming soon."],
+    github: project.github,
+    demo: project.demo,
+    image: project.image,
+    howToReproduce: "Check the GitHub repository for setup instructions."
+  };
+  return acc;
+}, {} as Record<string, any>);
 
 export default function ProjectDetailPage({
   params,
