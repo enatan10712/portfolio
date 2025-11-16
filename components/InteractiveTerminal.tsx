@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useMemo, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 
 type Output = string | JSX.Element;
@@ -22,8 +22,8 @@ const ASCII_ART = `
 
 const THEMES: Record<string, { bg: string; accent: string; text: string; secondary: string }> = {
   default: { bg: "bg-gray-900", accent: "#6ee7b7", text: "text-gray-100", secondary: "text-gray-400" },
-  dracula: { bg: "bg-[#282a36]", accent: "#bd93f9", text: "text-[#f8f8f2]", secondary: "text-[#6272a4]" },
-  neon: { bg: "bg-[#050406]", accent: "#00f5ff", text: "text-[#e6f7ff]", secondary: "#8bdcff" },
+  dracula: { bg: "bg-[#282a36]", accent: "#bd93f9", text: "text-[#f8f8f2]", secondary: "#6272a4" },
+  neon: { bg: "bg-[#050406]", accent: "#00f5ff", text: "#e6f7ff", secondary: "#8bdcff" },
   matrix: { bg: "bg-[#07190b]", accent: "#00ff41", text: "#dfffd8", secondary: "#6fbf6f" },
   nord: { bg: "bg-[#2e3440]", accent: "#88c0d0", text: "#eceff4", secondary: "#93a3b3" },
 };
@@ -32,7 +32,7 @@ const THEMES: Record<string, { bg: string; accent: string; text: string; seconda
 const lsGet = (k: string) => { try { return localStorage.getItem(k); } catch { return null; } };
 const lsSet = (k: string, v: string) => { try { localStorage.setItem(k, v); } catch {} };
 
-// Typewriter output component
+// Typewriter output
 const RenderOutput: React.FC<{ item: HistoryItem }> = ({ item }) => {
   const [visibleText, setVisibleText] = useState<string>(typeof item.output === "string" ? "" : "");
 
@@ -59,83 +59,59 @@ const RenderOutput: React.FC<{ item: HistoryItem }> = ({ item }) => {
 };
 
 export default function InteractiveTerminal() {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
   const [input, setInput] = useState("");
   const [history, setHistory] = useState<HistoryItem[]>(() => {
-    const raw = lsGet("enatan_terminal_history");
+    const raw = lsGet("terminal_history");
     if (raw) try { return JSON.parse(raw); } catch {}
     return [{ command: "", output: ASCII_ART, animated: true }];
   });
   const [commandHistory, setCommandHistory] = useState<string[]>(() => {
-    const raw = lsGet("enatan_terminal_cmds"); if (raw) try { return JSON.parse(raw); } catch {} return [];
+    const raw = lsGet("terminal_cmds"); if (raw) try { return JSON.parse(raw); } catch {} return [];
   });
   const [historyIndex, setHistoryIndex] = useState(-1);
-  const [themeKey, setThemeKey] = useState<string>(() => lsGet("enatan_terminal_theme") || "default");
+  const [themeKey, setThemeKey] = useState<string>(() => lsGet("terminal_theme") || "default");
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [position, setPosition] = useState<{ x: number; y: number }>(() => {
-    const raw = lsGet("enatan_terminal_pos"); if (raw) try { return JSON.parse(raw); } catch {} return { x: 0, y: 0 };
-  });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
   const terminalRef = useRef<HTMLDivElement | null>(null);
-  const dragRef = useRef<HTMLDivElement | null>(null);
-  const dragData = useRef<{ dragging: boolean; startX: number; startY: number; origX: number; origY: number }>({
-    dragging: false, startX: 0, startY: 0, origX: 0, origY: 0,
-  });
 
   const theme = THEMES[themeKey] || THEMES["default"];
 
   // Persist history
-  useEffect(() => lsSet("enatan_terminal_history", JSON.stringify(history)), [history]);
-  useEffect(() => lsSet("enatan_terminal_cmds", JSON.stringify(commandHistory)), [commandHistory]);
+  useEffect(() => lsSet("terminal_history", JSON.stringify(history)), [history]);
+  useEffect(() => lsSet("terminal_cmds", JSON.stringify(commandHistory)), [commandHistory]);
 
-  // Focus input on expand
-  useEffect(() => { if (isExpanded && inputRef.current) inputRef.current.focus(); }, [isExpanded]);
+  // Focus input
+  useEffect(() => { if (inputRef.current) inputRef.current.focus(); }, [isExpanded]);
 
-  // Scroll to bottom
-  useEffect(() => { if (terminalRef.current) terminalRef.current.scrollTop = terminalRef.current.scrollHeight; }, [history]);
-
-  // Drag functionality
+  // Scroll to bottom smoothly
   useEffect(() => {
-    const el = dragRef.current; if (!el) return;
-    const onPointerDown = (e: PointerEvent) => {
-      dragData.current.dragging = true;
-      dragData.current.startX = e.clientX;
-      dragData.current.startY = e.clientY;
-      dragData.current.origX = position.x;
-      dragData.current.origY = position.y;
-      el.setPointerCapture(e.pointerId);
-    };
-    const onPointerMove = (e: PointerEvent) => {
-      if (!dragData.current.dragging) return;
-      setPosition({ x: dragData.current.origX + e.clientX - dragData.current.startX, y: dragData.current.origY + e.clientY - dragData.current.startY });
-    };
-    const onPointerUp = (e: PointerEvent) => {
-      dragData.current.dragging = false;
-      try { el.releasePointerCapture(e.pointerId); } catch {}
-      lsSet("enatan_terminal_pos", JSON.stringify(position));
-    };
-    el.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", onPointerUp);
-    return () => {
-      el.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", onPointerUp);
-    };
-  }, [position]);
+    if (terminalRef.current) {
+      terminalRef.current.scrollTo({ top: terminalRef.current.scrollHeight, behavior: "smooth" });
+    }
+  }, [history]);
 
+  // Execute command
   const executeCommand = useCallback((rawInput: string) => {
     const trimmed = rawInput.trim();
     if (!trimmed) return;
     setCommandHistory(prev => [...prev, trimmed]);
     setHistoryIndex(-1);
+    // Example: echo command
+    if (trimmed.toLowerCase().startsWith("echo ")) {
+      setHistory(prev => [...prev, { command: trimmed, output: trimmed.slice(5), animated: false }]);
+      setInput("");
+      return;
+    }
     setHistory(prev => [...prev, { command: trimmed, output: `Executed: ${trimmed}`, animated: true }]);
     setInput("");
   }, []);
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") { executeCommand(input); setShowSuggestions(false); }
+    if (e.key === "ArrowUp") { e.preventDefault(); if (!commandHistory.length) return; const idx = historyIndex <= 0 ? commandHistory.length - 1 : historyIndex - 1; setHistoryIndex(idx); setInput(commandHistory[idx] || ""); }
+    if (e.key === "ArrowDown") { e.preventDefault(); if (historyIndex === -1) return; const idx = historyIndex + 1; if (idx >= commandHistory.length) { setHistoryIndex(-1); setInput(""); } else { setHistoryIndex(idx); setInput(commandHistory[idx]); } }
   };
 
   const availableCommandNames = ["help", "about", "skills", "projects", "contact", "resume"];
@@ -146,10 +122,10 @@ export default function InteractiveTerminal() {
   }, [input]);
 
   return (
-    <div className={`fixed z-40 w-[min(98vw,900px)] max-w-3xl`} style={{ left: position.x, top: position.y }}>
+    <div className={`fixed z-40 w-[min(98vw,900px)] max-w-3xl top-10 left-1/2 -translate-x-1/2`}>
       <div className={`rounded-lg overflow-hidden shadow-lg transition-all duration-200 ${theme.bg}`} style={{ boxShadow: "0 10px 25px rgba(0,0,0,0.4)" }}>
         {/* Header */}
-        <div ref={dragRef} className="flex items-center justify-between px-4 py-3 cursor-grab select-none bg-gray-900/90" onDoubleClick={() => setIsExpanded(s => !s)}>
+        <div className="flex items-center justify-between px-4 py-3 bg-gray-900/90">
           <div className="flex items-center space-x-2">
             <div className="flex space-x-1.5 mr-3">
               <div className="w-3 h-3 rounded-full bg-red-500/90" />
@@ -167,54 +143,48 @@ export default function InteractiveTerminal() {
         <AnimatePresence initial={false}>
           {isExpanded && (
             <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }}>
-              <div className="h-[520px] overflow-hidden flex">
-                <div ref={terminalRef} className={`flex-1 p-4 overflow-y-auto font-mono text-sm ${theme.text}`}>
-                  <div className="space-y-3">
-                    {history.map((item, idx) => (
-                      <div key={`${item.command}-${idx}`}>
-                        {item.command && <div className={`${theme.secondary} mb-1`}>$ {item.command}</div>}
-                        <div className={`${theme.text} ml-4`}>
-                          {item.animated ? <RenderOutput item={item} /> : typeof item.output === "string" ? <div className="whitespace-pre-wrap">{item.output}</div> : item.output}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Input */}
-                  <div className="mt-4 flex flex-col">
-                    <div className="flex items-center gap-3">
-                      <span className={`${theme.secondary}`}>$</span>
-                      <input
-                        ref={inputRef}
-                        value={input}
-                        onChange={e => { setInput(e.target.value); setShowSuggestions(true); }}
-                        onKeyDown={onKeyDown}
-                        className={`flex-1 bg-transparent outline-none ${theme.text} font-mono text-sm`}
-                        placeholder="Type 'help' for commands..."
-                        spellCheck={false}
-                        autoComplete="off"
-                      />
+              <div ref={terminalRef} className="h-[520px] overflow-auto flex flex-col p-4 font-mono text-sm space-y-3">
+                {history.map((item, idx) => (
+                  <div key={`${item.command}-${idx}`}>
+                    {item.command && <div className={`${theme.secondary} mb-1`}>$ {item.command}</div>}
+                    <div className={`${theme.text} ml-4`}>
+                      {item.animated ? <RenderOutput item={item} /> : typeof item.output === "string" ? <div className="whitespace-pre-wrap">{item.output}</div> : item.output}
                     </div>
-
-                    {/* Suggestions */}
-                    {showSuggestions && suggestionMatches.length > 0 && (
-                      <div className="mt-1 bg-black/50 p-1 rounded text-xs grid grid-cols-3 gap-1">
-                        {suggestionMatches.map(s => {
-                          const matchIndex = s.toLowerCase().indexOf(input.toLowerCase());
-                          const before = s.slice(0, matchIndex);
-                          const match = s.slice(matchIndex, matchIndex + input.length);
-                          const after = s.slice(matchIndex + input.length);
-                          return (
-                            <button key={s} className={`${theme.secondary} hover:text-accent text-left`}
-                              onClick={() => { setInput(s + " "); setShowSuggestions(false); inputRef.current?.focus(); }}>
-                              <span>{before}</span><span className="text-accent font-bold">{match}</span><span>{after}</span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                    )}
                   </div>
+                ))}
+
+                {/* Input */}
+                <div className="mt-4 flex items-center gap-3">
+                  <span className={`${theme.secondary}`}>$</span>
+                  <input
+                    ref={inputRef}
+                    value={input}
+                    onChange={e => { setInput(e.target.value); setShowSuggestions(true); }}
+                    onKeyDown={onKeyDown}
+                    className={`flex-1 bg-transparent outline-none ${theme.text} font-mono text-sm`}
+                    placeholder="Type 'help' for commands..."
+                    spellCheck={false}
+                    autoComplete="off"
+                  />
                 </div>
+
+                {/* Suggestions */}
+                {showSuggestions && suggestionMatches.length > 0 && (
+                  <div className="mt-1 bg-black/50 p-1 rounded text-xs grid grid-cols-3 gap-1">
+                    {suggestionMatches.map(s => {
+                      const matchIndex = s.toLowerCase().indexOf(input.toLowerCase());
+                      const before = s.slice(0, matchIndex);
+                      const match = s.slice(matchIndex, matchIndex + input.length);
+                      const after = s.slice(matchIndex + input.length);
+                      return (
+                        <button key={s} className={`${theme.secondary} hover:text-accent text-left`}
+                          onClick={() => { setInput(s + " "); setShowSuggestions(false); inputRef.current?.focus(); }}>
+                          <span>{before}</span><span className="text-accent font-bold">{match}</span><span>{after}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
