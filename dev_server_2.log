@@ -1,0 +1,20 @@
+
+> enatan-portfolio@1.0.0 dev
+> next dev
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 3.5s
+ ○ Compiling / ...
+[baseline-browser-mapping] The data in this module is over two months old.  To ensure accurate Baseline data, please update: `npm i baseline-browser-mapping@latest -D`
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme
+ ✓ Compiled / in 8.3s (1312 modules)
+ GET / 200 in 9236ms
+ ✓ Compiled in 908ms (656 modules)
+ HEAD / 200 in 49ms
+ GET / 200 in 42ms
+[?25h

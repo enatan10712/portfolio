@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 const Hero = () => {
   return (
@@ -21,7 +22,7 @@ const Hero = () => {
           className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/10 text-primary text-xs font-semibold mb-6"
         >
           <Sparkles size={14} />
-          <span>Next-Gen Portfolio Template</span>
+          <span>✨ Available for opportunities</span>
         </motion.div>
 
         <motion.h1
@@ -30,8 +31,8 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 0.1 }}
           className="text-5xl md:text-7xl font-bold tracking-tight mb-6"
         >
-          Build your brand with <br />
-          <span className="text-gradient">unmatched precision.</span>
+          Enatan Dereje <br />
+          <span className="text-gradient">Data & Security Architect.</span>
         </motion.h1>
 
         <motion.p
@@ -40,8 +41,8 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-2xl mx-auto text-lg md:text-xl text-muted-foreground mb-10"
         >
-          Experience a modern, high-performance portfolio designed for
-          professionals who demand the best in design and technology.
+          Building machine learning models, cleaning large datasets, and testing
+          websites for security. Creating reliable systems that scale.
         </motion.p>
 
         <motion.div
@@ -50,13 +51,19 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          <button className="w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
-            Get Started Free
+          <Link
+            href="#contact"
+            className="w-full sm:w-auto px-8 py-4 rounded-full bg-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+          >
+            Hire Me
             <ArrowRight size={18} />
-          </button>
-          <button className="w-full sm:w-auto px-8 py-4 rounded-full border border-border bg-background hover:bg-muted font-semibold transition-colors">
-            View Components
-          </button>
+          </Link>
+          <Link
+            href="#features"
+            className="w-full sm:w-auto px-8 py-4 rounded-full border border-border bg-background hover:bg-muted font-semibold transition-colors text-center"
+          >
+            View My Work
+          </Link>
         </motion.div>
       </div>
     </section>

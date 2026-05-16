@@ -45,9 +45,12 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          <button className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity">
+          <Link
+            href="#contact"
+            className="px-5 py-2 rounded-full bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition-opacity"
+          >
             Get Started
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Toggle */}
@@ -79,9 +82,13 @@ const Navbar = () => {
                   {link.name}
                 </Link>
               ))}
-              <button className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium">
+              <Link
+                href="#contact"
+                className="w-full py-3 rounded-xl bg-primary text-primary-foreground font-medium text-center"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 Get Started
-              </button>
+              </Link>
             </div>
           </motion.div>
         )}

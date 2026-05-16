@@ -6,27 +6,27 @@ import { Check } from "lucide-react";
 
 const tiers = [
   {
-    name: "Starter",
-    price: "$0",
-    description: "Perfect for individuals and small projects.",
-    features: ["Personal Projects", "Community Support", "Basic Analytics"],
-    buttonText: "Get Started",
+    name: "Consultation",
+    price: "Free",
+    description: "Initial 30-minute project scoping and advice.",
+    features: ["Project Strategy", "Tech Stack Review", "Roadmap Planning"],
+    buttonText: "Book Now",
     highlight: false,
   },
   {
-    name: "Pro",
-    price: "$19",
-    description: "Ideal for professionals and growing businesses.",
-    features: ["Unlimited Projects", "Priority Support", "Advanced Analytics", "Custom Domain"],
-    buttonText: "Go Pro",
+    name: "Development",
+    price: "Custom",
+    description: "Full-cycle implementation of data or web projects.",
+    features: ["End-to-end Development", "ML Integration", "Security Best Practices", "Scalable Architecture"],
+    buttonText: "Inquire",
     highlight: true,
   },
   {
-    name: "Enterprise",
-    price: "$49",
-    description: "Advanced features for large scale applications.",
-    features: ["24/7 Support", "Custom Integrations", "SLA Guarantee", "Team Management"],
-    buttonText: "Contact Us",
+    name: "Audit",
+    price: "Custom",
+    description: "In-depth security assessment or data pipeline review.",
+    features: ["Penetration Testing", "Vulnerability Analysis", "Data Quality Audit", "Performance Tuning"],
+    buttonText: "Request Audit",
     highlight: false,
   },
 ];
@@ -36,9 +36,9 @@ const Pricing = () => {
     <section id="pricing" className="py-24">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-5xl font-bold mb-4">Simple, transparent pricing</h2>
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">Service Offerings</h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Choose the plan that's right for you and start building today.
+            Transparent engagement models tailored to your project's specific needs.
           </p>
         </div>
 
@@ -65,7 +65,6 @@ const Pricing = () => {
               <h3 className="text-xl font-bold mb-2">{tier.name}</h3>
               <div className="flex items-baseline gap-1 mb-4">
                 <span className="text-4xl font-bold">{tier.price}</span>
-                <span className="text-muted-foreground">/mo</span>
               </div>
               <p className="text-sm text-muted-foreground mb-8">{tier.description}</p>
 

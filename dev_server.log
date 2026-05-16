@@ -18,3 +18,14 @@ Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
  ✓ Compiled in 428ms (656 modules)
  ✓ Compiled / in 249ms (647 modules)
  GET / 200 in 488ms
+ ✓ Compiled in 5.4s (1303 modules)
+ ✓ Compiled in 964ms (1303 modules)
+ ✓ Compiled in 430ms (1303 modules)
+ ✓ Compiled in 1724ms (1303 modules)
+ GET / 200 in 201ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 1657ms (1292 modules)
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 3.7s (1516 modules)
+ GET /_vercel/speed-insights/script.js 404 in 5769ms
+[?25h

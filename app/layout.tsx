@@ -12,8 +12,15 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Modern Portfolio",
-  description: "Modern production-grade portfolio",
+  title: "Enatan Dereje — Data Scientist • Web Pentester • Developer",
+  description: "Building machine learning models, cleaning large datasets, and testing websites for security problems. Creating reliable systems that scale.",
+  keywords: ["Data Science", "Machine Learning", "Web Security", "Penetration Testing", "ML Pipelines", "Security Assessment", "Pentest Reports", "Reproducible Experiments"],
+  authors: [{ name: "Enatan Dereje" }],
+  openGraph: {
+    title: "Enatan Dereje — Data Scientist • Web Pentester • Developer",
+    description: "Building ML models. Testing websites for security. Creating reliable systems that scale.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({

@@ -6,20 +6,20 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "What technologies are used in this template?",
-    answer: "This template is built with Next.js 14 (App Router), TypeScript, Tailwind CSS, and Framer Motion for animations. It follows modern web standards and best practices for performance and scalability.",
+    question: "What is your primary area of expertise?",
+    answer: "My expertise lies at the intersection of Data Science and Web Security. I specialize in building robust machine learning models and ensuring the security of web applications through rigorous penetration testing.",
   },
   {
-    question: "Is it mobile responsive?",
-    answer: "Yes, absolutely! The entire portfolio is built with a mobile-first approach, ensuring it looks great on smartphones, tablets, and desktops alike.",
+    question: "Which technologies do you work with most?",
+    answer: "I primarily use Python for data science and ML tasks, and Next.js/TypeScript for web development. For security, I use a variety of specialized tools and manual testing techniques.",
   },
   {
-    question: "How do I customize the theme?",
-    answer: "The theme uses Tailwind CSS and CSS variables for easy customization. You can update the color palette and design tokens in tailwind.config.js and globals.css.",
+    question: "Are you available for freelance projects?",
+    answer: "Yes, I am currently open to new opportunities, including full-time roles and high-impact freelance projects in data science or security auditing.",
   },
   {
-    question: "Does it support dark mode?",
-    answer: "Yes, it has a native dark mode aesthetic powered by next-themes. It respects system preferences and allows for manual toggling.",
+    question: "How can I get in touch for a collaboration?",
+    answer: "You can reach out to me via the 'Hire Me' button in the hero section or connect with me on LinkedIn. I am always happy to discuss interesting projects and technical challenges.",
   },
 ];
 
@@ -66,7 +66,7 @@ const FAQ = () => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Frequently Asked Questions</h2>
           <p className="text-muted-foreground text-lg">
-            Find answers to common questions about our platform and services.
+            Find answers to common questions about my background, services, and expertise.
           </p>
         </div>
 
