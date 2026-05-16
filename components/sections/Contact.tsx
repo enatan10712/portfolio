@@ -11,10 +11,28 @@ const Contact = () => {
     e.preventDefault();
     setStatus("sending");
 
-    // Simulate API call
-    setTimeout(() => {
-      setStatus("success");
-    }, 1500);
+    const formData = new FormData(e.currentTarget);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      message: formData.get("message"),
+    };
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
   };
 
   return (
@@ -59,6 +77,7 @@ const Contact = () => {
                   </label>
                   <input
                     id="name"
+                    name="name"
                     type="text"
                     required
                     placeholder="Your Name"
@@ -71,6 +90,7 @@ const Contact = () => {
                   </label>
                   <input
                     id="email"
+                    name="email"
                     type="email"
                     required
                     placeholder="your@email.com"
@@ -84,6 +104,7 @@ const Contact = () => {
                 </label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   rows={5}
                   placeholder="Tell me about your project..."
