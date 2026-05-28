@@ -2,15 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import { ThemeProvider } from "@/components/ThemeProvider";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ScrollProgress from "@/components/ScrollProgress";
-import ParticleBackground from "@/components/ParticleBackground";
-import CustomCursor from "@/components/CustomCursor";
-import MouseTrail from "@/components/MouseTrail";
-import BackgroundGradient from "@/components/BackgroundGradient";
-import { usePageTransitionSounds } from "@/hooks/usePageTransitionSounds";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import Navbar from "@/components/sections/Navbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,11 +23,6 @@ export const metadata: Metadata = {
   },
 };
 
-function PageTransitionHandler() {
-  usePageTransitionSounds();
-  return null;
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -42,21 +30,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-          <ScrollProgress />
-          {/* <CustomCursor /> */}
-          <MouseTrail />
-          <BackgroundGradient />
-          <ParticleBackground />
           <div className="min-h-screen flex flex-col relative">
-            <PageTransitionHandler />
-            <Header />
+            <Navbar />
             <main className="flex-grow">
               {children}
               <SpeedInsights />
             </main>
-            <Footer />
           </div>
         </ThemeProvider>
       </body>

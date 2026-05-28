@@ -9,6 +9,33 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Core theme colors mapped to requested design system
+        primary: {
+          DEFAULT: '#3dd4c9',
+          foreground: '#0b0f14',
+        },
+        secondary: {
+          DEFAULT: '#151a21',
+          foreground: '#e6eef6',
+        },
+        muted: {
+          DEFAULT: '#1a2028',
+          foreground: '#8b95a3',
+        },
+        accent: {
+          DEFAULT: '#3dd4c9',
+          foreground: '#0b0f14',
+        },
+        background: '#0b0f14',
+        foreground: '#e6eef6',
+        card: {
+          DEFAULT: '#151a21',
+          foreground: '#e6eef6',
+        },
+        border: '#1f2937',
+        input: '#1f2937',
+        ring: '#3dd4c9',
+
         // Dark theme
         'dark-bg': '#0b0f14',
         'dark-surface': '#151a21',
@@ -26,7 +53,6 @@ module.exports = {
         'light-border': '#e5e7eb',
         'light-border-light': '#d1d5db',
         // Accent
-        'accent': '#3dd4c9',
         'accent-hover': '#2ec4b9',
         'accent-light': '#0891b2',
         'accent-light-hover': '#0e7490',
